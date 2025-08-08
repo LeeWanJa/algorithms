@@ -143,8 +143,8 @@ int main()
 {
 	vector<int> my_vector = { 11,  7, 14,  6, 20,  4,  0, 10, 23,  5,  8, 17,  9, 21, 12, 22, 19, 15,  3, 13, 18,  1,  2, 16 };
 	//vector<int> my_vector(25);
-	std::iota(my_vector.begin(), my_vector.end(), 0); // iota는 0, 1, 2, ... , n-1 까지 순서대로 채워주는 함수
-	std::reverse(my_vector.begin(), my_vector.end());
+	//std::iota(my_vector.begin(), my_vector.end(), 0); // iota는 0, 1, 2, ... , n-1 까지 순서대로 채워주는 함수
+	//std::reverse(my_vector.begin(), my_vector.end());
 
 	cout << "Median = " << Select(my_vector, 0, my_vector.size() - 1, std::ceil(my_vector.size() / 2.0)).value << endl;
 
