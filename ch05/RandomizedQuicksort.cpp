@@ -53,6 +53,12 @@ void RandomizedQuicksort(vector<int>& arr, int lo, int hi)
 	Print(arr, lo, hi);
 
 	// TODO:
+	if(lo >= hi)
+		return;
+
+	int new_idx = RandomizedPartition(arr, lo, hi);
+	RandomizedQuicksort(arr, lo, new_idx - 1);
+	RandomizedQuicksort(arr, new_idx + 1, hi);
 }
 
 int main()
