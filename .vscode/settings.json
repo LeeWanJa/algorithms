@@ -50,6 +50,8 @@
         "chrono": "cpp",
         "deque": "cpp",
         "stack": "cpp",
-        "xtree": "cpp"
+        "xtree": "cpp",
+        "charconv": "cpp",
+        "fstream": "cpp"
     }
 }
