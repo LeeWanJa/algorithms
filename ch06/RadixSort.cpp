@@ -23,10 +23,18 @@ void CountingSort(vector<int>& arr, int k, int exp)
 
 	vector<int> count(k + 1, 0);
 	// TODO:
-
-	for (int i = arr.size() - 1; i >= 0; i--)
+	int div = exp * 10;
+	for(int i = 0; i < arr.size(); i++)
+		count[(temp[i] % div) / exp]++;
+	
+	for(int i = 1; i < count.size(); i++)
+		count[i] += count[i - 1];
+		
+	for(int i = arr.size() - 1; i >= 0; i--)
 	{
-		// TODO:
+		int idx = (temp[i] % div) / exp;
+		arr[count[idx] - 1] = temp[i];
+		count[idx]--;
 	}
 }
 
@@ -40,9 +48,8 @@ void RadixSort(vector<int>& arr)
 	{
 		cout << "exp = " << exp << endl;
         // TODO
-        vector<int> count(k + 1);
-         
-		
+		CountingSort(arr, k, exp);
+
 		Print(arr);
 	}
 }
