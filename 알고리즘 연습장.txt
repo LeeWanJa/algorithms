@@ -1,0 +1,12 @@
+DeleteMin() 함수 실행
+루트 노드 M의 자식들 모두 black이기 때문에 M 노드 red로 변경
+이후 매개변수 있는 함수 DeleteMin(root) 함수 실행
+
+DeleteMin() M 문자열 실행
+M의 왼쪽 오른쪽 자식 모두 black 이므로 MoveRedLeft(M 노드) 함수 실행
+
+MoveRedLeft() M 문자열 실행
+FlipColors()에 의해 M은 black 으로, 나머지 자식들은 red로 색 변경
+
+A -> C 까지 삭제
+이후 과정 gemini 한테 다시 설명
