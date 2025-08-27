@@ -256,11 +256,26 @@ public:
 	}
 
 	// 삭제할 때 사용됨 (MoveRedLeft와 좌우대칭)
+	// 현재 노드의 오른쪽 자식과 오른쪽 자식의 왼쪽 자식이 모두 블랙인 경우임
+	// 즉 왼쪽에서 빌려와야 하는 상황
 	Node* MoveRedRight(Node* h)
 	{
 		cout << "MoveRedRight() " << h->key << endl;
 
 		// TODO:
+		FlipColors(h);
+
+		Print2D(h);
+
+		// TODO
+		if (IsRed(h->left->left))
+		{
+			h = RotateRight(h);
+			Print2D(h);
+
+			FlipColors(h);
+			Print2D(h);
+		}
 
 		return h;
 	}
@@ -315,11 +330,41 @@ public:
 	void DeleteMax()
 	{
 		// TODO:
+		assert(!IsEmpty());
+
+		// 루트가 가운데인 4-노드로 임시 변경
+		if (!IsRed(root->left) && !IsRed(root->right))
+			root->color = Color::kRed;
+
+		Print2D(); // 필요하면 여기서도 출력해보세요.
+
+		root = DeleteMax(root);
+
+		// 루트는 항상 블랙
+		if (!IsEmpty())
+			root->color = Color::kBlack;
 	}
+
 	Node* DeleteMax(Node* h)
 	{
-		// TODO:
-		return nullptr;
+		// 실행 예시에서 *S-X에서 X 삭제 참고
+        // *S가 X의 왼쪽 자식이기 때문에 *S를 위로 올려서
+        // X가 *S의 오른쪽 자식이 되도록 만든 후에 X 삭제
+        if (IsRed(h->left))
+            h = RotateRight(h);
+
+        if (h->right == nullptr)
+        {
+            delete h; // 자바는 가비지 컬렉터 사용
+            return nullptr;
+        }
+
+        if (!IsRed(h->right) && !IsRed(h->right->left))
+            h = MoveRedRight(h);
+
+        h->right = DeleteMax(h->right);
+
+        return Balance(h);
 	}
 
 	// 임의의 키(key)를 찾아서 삭제
@@ -338,45 +383,50 @@ public:
 
 	Node* Delete(Node* h, Key key)
 	{
-		//if ( TODO ) // 왼쪽으로 찾아 내려가서 지우는 경우
-		//{
-		//	// 힌트: DeleteMin()과 비슷함
+		// TODO
+		// 왼쪽으로 찾아 내려가서 지우는 경우
+		if (h->key > key) 
+		{
+			if(!IsRed(h->left) && !IsRed(h->left->left))
+				h = MoveRedLeft(h);
 
-		//	if ( TODO )
-		//		h = TODO
+			h->left = Delete(h->left, key);
+		}
+		else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
+		{
+			// DeleteMax()와 비슷한 경우
+			if (IsRed(h->left))
+				h = RotateRight(h);
 
-		//	h->left = TODO
-		//}
-		//else // 오른쪽으로 찾아 내려가거나 바로 삭제하는 경우
-		//{
-		//	// DeleteMax()와 비슷한 경우
-		//	if ( TODO )
-		//		h = TODO
+			// 키가 일치하고 오른쪽 서브트리가 없으면 삭제
+			// 왼쪽 서브트리에 대한 처리는 바로 위의 RotateRight()에 해줬음
+			if ((h->key == key) && (!h->right))
+			{
+				delete h; // 자바는 가비지 컬렉터 사용
+				return nullptr;
+			}
 
-		//	// 키가 일치하고 오른쪽 서브트리가 없으면 삭제
-		//	// 왼쪽 서브트리에 대한 처리는 바로 위의 RotateRight()에 해줬음
-		//	if ((TODO) && (TODO))
-		//	{
-		//		delete h; // 자바는 가비지 컬렉터 사용
-		//		return nullptr;
-		//	}
+			if (!IsRed(h->right) && !IsRed(h->right->left))
+				h = MoveRedRight(h);
 
-		//	if (!IsRed(h->right) && !IsRed(h->right->left))
-		//		h = MoveRedRight(h);
-
-		//	// 삭제하는 경우
-		//	if (key == h->key)
-		//	{
-		//		// 오른쪽 서브트리에서 가장 작은 것을 h로 복사한 후에
-		//		// DeleteMin()으로 그것을 삭제
-		//      
-		//		// TODO: Min() 사용, 4줄 정도 됩니다.
-		//	}
-		//	else {
-		//		// 오른쪽으로 계속 찾아가기
-		//		h->right = Delete(h->right, key);
-		//	}
-		//}
+			// 삭제하는 경우
+			// 오른쪽 서브트리 존재
+			if (key == h->key)
+			{
+				// 오른쪽 서브트리에서 가장 작은 것을 h로 복사한 후에
+				// DeleteMin()으로 그것을 삭제
+				// TODO: Min() 사용, 4줄 정도 됩니다.
+				Node* min_node = Min(h->right);
+				h->key = min_node->key;
+				h->val = min_node->val;
+				h->right = DeleteMin(h->right);
+			}
+			else 
+			{
+				// 오른쪽으로 계속 찾아가기
+				h->right = Delete(h->right, key);
+			}
+		}
 
 		return Balance(h);
 	}
@@ -448,30 +498,30 @@ int main()
 
 		bst.Print2D();
 
-		// for (char c : keys)
-		// {
-		// 	cout << "Delete: " << string(1, c) << endl;
-		// 	bst.Delete(string(1, c));
-		// 	bst.Print2D();
-
-		// }
-		// return 0;
-
-		while (!bst.IsEmpty())
+		for (char c : keys)
 		{
-			cout << "DeleteMin: " << bst.Min() << endl;
-			bst.DeleteMin();
+			cout << "Delete: " << string(1, c) << endl;
+			bst.Delete(string(1, c));
 			bst.Print2D();
-		}
-		cout << endl;
 
-		//while (!bst.IsEmpty())
-		//{
-		//	cout << "DeleteMax: " << bst.Max() << endl;
-		//	bst.DeleteMax();
-		//	bst.Print2D();
-		//}
-		//cout << endl;
+		}
+		return 0;
+
+		// while (!bst.IsEmpty())
+		// {
+		// 	cout << "DeleteMin: " << bst.Min() << endl;
+		// 	bst.DeleteMin();
+		// 	bst.Print2D();
+		// }
+		// cout << endl;
+
+		// while (!bst.IsEmpty())
+		// {
+		// 	cout << "DeleteMax: " << bst.Max() << endl;
+		// 	bst.DeleteMax();
+		// 	bst.Print2D();
+		// }
+		// cout << endl;
 	}
 
 	// ACEHLMPRSX 순서로 추가
