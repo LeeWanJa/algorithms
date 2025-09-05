@@ -20,9 +20,47 @@ int RomanToInt(string s)
 
 	int ans = 0;
 
-	for (int i = 0; i < s.length(); i++)
+	// int tail = m[s[0]];
+	// ans += tail;
+	// for (int i = 1; i < s.length(); i++)
+	// {
+	// 	// TODO:
+	// 	// 키 일치는 따로 검사 x, m의 키에 해당하는 문자 입력만 들어옴을 가정
+	// 	// 수의 범위 1 ~ 3999
+	// 	if(tail < m[s[i]])
+	// 		ans = ans - tail + (m[s[i]] - tail);
+	// 	else
+	// 		ans += m[s[i]];
+		
+	// 	tail = m[s[i]];
+	// }
+
+
+
+    // for (int i = 0; i < s.length(); i++)
+    // {
+	// 	if(i == 0)
+	// 	{
+	// 		ans += m[s[i]];
+	// 		continue;
+	// 	}
+			
+	// 	int tail = m[s[i - 1]];
+	// 	int current = m[s[i]];
+	// 	if(tail < current)
+	// 		ans = ans - tail + (current - tail);
+	// 	else
+	// 		ans += current;
+	// }
+
+
+	// Answer
+	for(int i = 0; i < s.length(); i++)
 	{
-		// TODO:
+		if(i < s.length() - 1 && m[s[i]] < m[s[i + 1]])
+			ans -= m[s[i]];
+		else
+			ans += m[s[i]];
 	}
 
 	cout << s << " = " << ans << endl;
