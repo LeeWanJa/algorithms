@@ -51,6 +51,7 @@ public:
 		DFS(vertices[source]);
 		cout << endl;
 	}
+
 	void DFS(Vertex* source)
 	{
 		cout << source->value << " ";
@@ -81,6 +82,25 @@ private:
 		PrintPath(path);
 
 		// TODO:
+		// 탐색 시작
+		source->visited = true;
+
+		if(source == sink)
+		{
+			cout << "Found:"; 
+			PrintPath(path);
+			source->visited = false;
+			return;
+		}	
+
+		for(auto* v : source->out_neighbors)
+		{
+			if(!v->visited)
+				DepthFirstPathHelper(v, sink, path);
+		}
+
+		// 탐색 끝
+		source->visited = false;
 	}
 
 	void PrintPath(vector<Vertex*> path)
