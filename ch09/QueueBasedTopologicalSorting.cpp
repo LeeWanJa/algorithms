@@ -85,6 +85,7 @@ public:
 	{
 		vector<int> indegree(vertices.size()); // indegree를 Vertex에 저장할 수도 있습니다.
 		// TODO:
+		// indegree[i] = 0 -> 진입차수가 0 -> 큐에 들어가게 최초로 들어가는 Vertex
         int cnt = 0;
         for(auto* v : this->vertices)
             indegree[cnt++] = v->in_neighbors.size();
@@ -101,15 +102,15 @@ public:
 		// TODO:
         while(!q.empty())
         {
-            Vertex* temp = q.front();
+            Vertex* front = q.front();
             q.pop();
             
-            result.push_back(temp);
+            result.push_back(front);
             
-            for(int i = 0; i < temp->out_neighbors.size(); i++)
+            for(int i = 0; i < front->out_neighbors.size(); i++)
             {
-                if(--indegree[temp->out_neighbors[i]->value] == 0)
-                    q.push(temp->out_neighbors[i]);
+                if(--indegree[front->out_neighbors[i]->value] == 0)
+                    q.push(front->out_neighbors[i]);
             }    
         }
 
@@ -127,57 +128,57 @@ private:
 int main()
 {
 	// 간단한 경우
-	{
-		// 0: 애피타이저
-		// 1: 메인요리
-		// 2: 디저트
+	// {
+	// 	// 0: 애피타이저
+	// 	// 1: 메인요리
+	// 	// 2: 디저트
 
-		Graph g(3);
-		g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
-		g.AddDiEdge(1, 2); // 메인요리 -> 디저트
-		g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
+	// 	Graph g(3);
+	// 	g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
+	// 	g.AddDiEdge(1, 2); // 메인요리 -> 디저트
+	// 	g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
 
-		// 디저트->애피타이저 X, 싸이클이 생기기 때문
+	// 	// 디저트->애피타이저 X, 싸이클이 생기기 때문
 
-		auto my_stack = g.QueueBasedTopologicalSort();
+	// 	auto my_stack = g.QueueBasedTopologicalSort();
 
-		g.PrecedenceCheck(my_stack);
+	// 	g.PrecedenceCheck(my_stack);
 
-		// 결과 출력
-		while (!my_stack.empty())
-		{
-			cout << my_stack.top()->value;
-			my_stack.pop();
-			if (!my_stack.empty())
-				cout << " -> ";
-		}
-		cout << endl;
-	}
+	// 	// 결과 출력
+	// 	while (!my_stack.empty())
+	// 	{
+	// 		cout << my_stack.top()->value;
+	// 		my_stack.pop();
+	// 		if (!my_stack.empty())
+	// 			cout << " -> ";
+	// 	}
+	// 	cout << endl;
+	// }
 
-	// 조금 더 복잡한 경우
-	{
-		Graph g(6);
+	// // 조금 더 복잡한 경우
+	// {
+	// 	Graph g(6);
 
-		g.AddDiEdge(5, 2);
-		g.AddDiEdge(5, 0);
-		g.AddDiEdge(0, 2);
-		g.AddDiEdge(4, 0);
-		g.AddDiEdge(4, 1);
-		g.AddDiEdge(2, 3);
-		g.AddDiEdge(3, 1);
+	// 	g.AddDiEdge(5, 2);
+	// 	g.AddDiEdge(5, 0);
+	// 	g.AddDiEdge(0, 2);
+	// 	g.AddDiEdge(4, 0);
+	// 	g.AddDiEdge(4, 1);
+	// 	g.AddDiEdge(2, 3);
+	// 	g.AddDiEdge(3, 1);
 
-		auto my_stack = g.QueueBasedTopologicalSort();
-		g.PrecedenceCheck(my_stack);
+	// 	auto my_stack = g.QueueBasedTopologicalSort();
+	// 	g.PrecedenceCheck(my_stack);
 
-		while (!my_stack.empty())
-		{
-			cout << my_stack.top()->value;
-			my_stack.pop();
-			if (!my_stack.empty())
-				cout << " -> ";
-		}
-		cout << endl;
-	}
+	// 	while (!my_stack.empty())
+	// 	{
+	// 		cout << my_stack.top()->value;
+	// 		my_stack.pop();
+	// 		if (!my_stack.empty())
+	// 			cout << " -> ";
+	// 	}
+	// 	cout << endl;
+	// }
 
 	{
 		// Sedgewick Ch4.2 p.582 jobs.txt 예제
