@@ -76,7 +76,7 @@ public:
 					q.push(w);
 
 					// prev[TODO] = TODO
-                    prev[w->value] = w; 
+                    prev[w->value] = v; 
 				}
 			}
 		}
@@ -85,9 +85,28 @@ public:
 
 		// TODO: prev를 이용해서 path 만들기
 		//       deque의 push_front() 사용
-        path.push_front(vertices[source]);
-        for(Vertex* v : prev)
-            path.push_front(v);
+
+		// prev[sink]가 존재 = 목전지가 존재한다는 것 -> sink에서 source 까지 넘어가기
+		if(prev[sink])
+		{
+			int val = sink;
+
+			// source 전까지의 경로 저장
+			while(prev[val])
+			{
+				path.push_front(vertices[val]);
+				val = prev[val]->value;
+			}
+
+			// 마지막 source 추가
+			path.push_front(vertices[val]);
+		}
+		else
+		{
+			cout << "No path found" << endl;
+			return path;
+		}	
+
 
 		// 결과 출력 (숫자만)
 		for (auto* v : path) {

@@ -1,0 +1,23 @@
+    deque<Vertex*> path;
+    if (prev[sink])
+        path.push_front(vertices[sink]);
+    else
+        cout << "No path found" << endl;
+
+    Vertex* p = prev[sink];
+    while (p != nullptr)
+    {
+        path.push_front(p);
+        p = prev[p->value];
+    }
+
+    for (auto* v : path) 
+    {
+        cout << v->value;
+        if (v != path.back())
+            cout << " -> ";
+    }
+    cout << endl;
+
+    return path;
+}
