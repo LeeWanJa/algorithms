@@ -112,7 +112,12 @@ public:
 				cout << "Cycle detected: " << w->index << endl;
 
 				// TODO: 싸이클 저장, 이것도 Kevin Bacon 예제 복습
-				// prev 활용
+				// v 에서 w 까지의 과정 역추정
+				for(Vertex* current = v; current != w; current = prev[current->index])
+					cycle.push_back(current);
+				
+				cycle.push_back(w);
+				cycle.push_back(v);
 			}
 		}
 
@@ -142,20 +147,20 @@ int main()
 	// 한 경로 안에서 한 번 방문한 정점은 다시 방문하지 않는다.
 
 	// 간단한 경우
-	{
-		// 0: 애피타이저
-		// 1: 메인요리
-		// 2: 디저트
+	// {
+	// 	// 0: 애피타이저
+	// 	// 1: 메인요리
+	// 	// 2: 디저트
 
-		Graph g(3);
-		g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
-		g.AddDiEdge(1, 2); // 메인요리 -> 디저트
-		//g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
-		g.AddDiEdge(2, 0); // 디저트 -> 애피타이저 싸이클 생성
+	// 	Graph g(3);
+	// 	g.AddDiEdge(0, 1); // 애피타이저 -> 메인요리
+	// 	g.AddDiEdge(1, 2); // 메인요리 -> 디저트
+	// 	//g.AddDiEdge(0, 2); // 애피타이저 -> 디저트
+	// 	g.AddDiEdge(2, 0); // 디저트 -> 애피타이저 싸이클 생성
 
-		//g.DFS(0);
-		g.DetectCycle();
-	}
+	// 	//g.DFS(0);
+	// 	g.DetectCycle();
+	// }
 
 	// Sedgewick Algorithm 4.1 p.536 (조금 달라요)
 	{
