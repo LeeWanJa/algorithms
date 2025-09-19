@@ -51,19 +51,35 @@ public:
 		vector<int> id(vertices.size(), -1);
 
 		// TODO: HasPath()를 이용해서 서로 강하게 연결된 요소들을 찾습니다.
+		for(int start = 0; start < vertices.size(); start++)
+		{
+			if(id[start] != -1)
+				continue;
+			
+			id[start] = count;
+
+			for(int target = 0; target < vertices.size(); target++)
+			{
+				// 양방향 연결이라면?
+				if(HasPath(start, target) && HasPath(target, start))
+					id[target] = count;
+			}
+
+			count++;
+		}
 
 		// 결과 정리 후 출력
-		//vector<vector<int>> components(count);
-		//for (int s = 0; s < vertices.size(); s++)
-		//	components[id[s]].push_back(s);
-		//cout << count << " strong components" << endl;
-		//for (int i = 0; i < components.size(); i++)
-		//{
-		//	cout << "Strong component " << i + 1 << ": ";
-		//	for (auto v : components[i])
-		//		cout << v << " ";
-		//	cout << endl;
-		//}
+		vector<vector<int>> components(count);
+		for (int s = 0; s < vertices.size(); s++)
+			components[id[s]].push_back(s);
+		cout << count << " strong components" << endl;
+		for (int i = 0; i < components.size(); i++)
+		{
+			cout << "Strong component " << i + 1 << ": ";
+			for (auto v : components[i])
+				cout << v << " ";
+			cout << endl;
+		}
 	}
 
 private:
@@ -72,7 +88,15 @@ private:
 	bool HasPathHelper(Vertex* v, Vertex* t)
 	{
 		// TODO: DFS 방식으로 v와 t가 만날 수 있는 지를 확인합니다.
+		v->visited = true;
 
+		if(v == t)
+			return true;
+		
+		for(auto* w : v->out_neighbors)
+			if(!w->visited && HasPathHelper(w, t))
+				return true;
+		
 		return false;
 	}
 };
